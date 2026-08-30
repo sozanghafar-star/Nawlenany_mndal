@@ -52,7 +52,7 @@
             display: none !important;
         }
 
-        /* --- پەڕەی ١: پێشەکی بە وێنەی یەکگرتووی چوار باڵ --- */
+        /* --- پەڕەی ١: پێشەکی بە وێنەی یەکگرتوو --- */
         #page-1 {
             background-color: #0a0102;
             z-index: 30;
@@ -61,15 +61,13 @@
             align-items: center;
         }
 
-        /* هەر چوار باڵەکە قەبارەی تەواوی شاشە وەردەگرن بۆ ئەوەی یەک وێنەی بێ درز دروست بکەن */
         .panel {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            /* وێنەی یەکگرتووی سەرەکی چوار باڵەکە لێرە دابنێ */
-            background-image: url('1788047392487.png');
+            background-image: url('IMAGE_COVER_FULL.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -77,18 +75,10 @@
             transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
         }
 
-        .panel-top {
-            clip-path: polygon(0 0, 100% 0, 50% 50%);
-        }
-        .panel-bottom {
-            clip-path: polygon(0 100%, 100% 100%, 50% 50%);
-        }
-        .panel-left {
-            clip-path: polygon(0 0, 50% 50%, 0 100%);
-        }
-        .panel-right {
-            clip-path: polygon(100% 0, 100% 100%, 50% 50%);
-        }
+        .panel-top { clip-path: polygon(0 0, 100% 0, 50% 50%); }
+        .panel-bottom { clip-path: polygon(0 100%, 100% 100%, 50% 50%); }
+        .panel-left { clip-path: polygon(0 0, 50% 50%, 0 100%); }
+        .panel-right { clip-path: polygon(100% 0, 100% 100%, 50% 50%); }
 
         .opened .panel-top { transform: translateY(-100%); }
         .opened .panel-bottom { transform: translateY(100%); }
@@ -130,7 +120,7 @@
             pointer-events: none;
         }
 
-        /* --- پەڕەی ٢: دەفتەری کراوە بە وێنەی یەکگرتوو --- */
+        /* --- پەڕەی ٢: دەفتەر بە وێنەی یەکگرتوو --- */
         #page-2 {
             background-color: var(--maroon-dark);
             z-index: 20;
@@ -190,13 +180,11 @@
             z-index: 20;
         }
 
-        /* بەکارهێنانی وێنەی یەکگرتوو بە ڕێژەی 200% لەسەر هەردوو پەڕەکە */
         .book-leaf {
             width: 50%;
             height: 100%;
             position: relative;
-            /* وێنەی یەکگرتووی دەفتەرەکە لێرە دابنێ */
-            background-image: url('5447c5e8f562fdf82fc6eb35fc026125.jpg');
+            background-image: url('IMAGE_NOTEBOOK_FULL.jpg');
             background-size: 200% 100%;
             background-repeat: no-repeat;
             background-color: #f7f3e8;
@@ -317,7 +305,6 @@
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(212, 175, 55, 0.1);
         }
 
-        /* لاکێشەی سەر کەوانەیی بۆ دانانی وێنە */
         .arched-image-men {
             width: 90%;
             height: 240px;
@@ -326,8 +313,7 @@
             background-size: cover;
             background-position: center;
             box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-            /* وێنەی ناو پەڕەی پیاوان لێرە دابنێ */
-            background-image: url('cce5bd16ad48b64d1957d0ee1a40acaf.jpg');
+            background-image: url('IMAGE_BABY_MEN.jpg');
         }
 
         .arched-image-women {
@@ -338,8 +324,7 @@
             background-size: cover;
             background-position: center;
             box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-            /* وێنەی ناو پەڕەی خانمان لێرە دابنێ */
-            background-image: url('cce5bd16ad48b64d1957d0ee1a40acaf.jpg');
+            background-image: url('IMAGE_BABY_WOMEN.jpg');
         }
 
         .label-title {
@@ -402,18 +387,14 @@
             font-weight: 600;
         }
 
-        .map-card {
+        /* ستیلی ماپی ڕاستەوخۆ (Interactive Google Map) */
+        .map-interactive-frame {
             width: 90%;
-            height: 170px;
-            background-color: #120204;
+            height: 220px;
             border-radius: 14px;
-            border: 1px solid var(--vip-border);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-image: url('IMAGE_MAP_PREVIEW.jpg');
-            background-size: cover;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border: 1.5px solid var(--vip-border);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+            display: block;
         }
 
         .btn-google-map {
@@ -501,11 +482,14 @@
 </head>
 <body>
 
+    <!-- بەشی فایلی موزیک -->
+    <audio id="bg-music" src="alhamdulila.mp3" loop preload="auto"></audio>
+
     <div class="main-container">
 
         <canvas id="fireworks-overlay"></canvas>
 
-        <!-- پەڕەی ١: پێشەکی چوار باڵی یەکگرتوو -->
+        <!-- پەڕەی ١: پێشەکی -->
         <div id="page-1" class="page">
             <div class="panel panel-top"></div>
             <div class="panel panel-bottom"></div>
@@ -517,7 +501,7 @@
             </div>
         </div>
 
-        <!-- پەڕەی ٢: دەفتەری کراوەی یەکگرتوو -->
+        <!-- پەڕەی ٢: دەفتەرەکە -->
         <div id="page-2" class="page hidden">
             <div id="greeting-text">
                 <span id="guest-name">سڵاو</span> ، بەڕێزتان بانگهێشت کراون بۆ ئەم بۆنەیە ، تکایە دەست لە پەڕی گونجاو بدە
@@ -527,12 +511,10 @@
                 <div class="book-container">
                     <div class="book-spine"></div>
                     <div class="book-leaf leaf-left" id="btn-women">
-                        <div class="direct-leaf-text">تایبەت بە 
-                            خانمان</div>
+                        <div class="direct-leaf-text">تایبەت بە خانمان</div>
                     </div>
                     <div class="book-leaf leaf-right" id="btn-men">
-                        <div class="direct-leaf-text">تایبەت بە
-                            پیاوان</div>
+                        <div class="direct-leaf-text">تایبەت بە پیاوان</div>
                     </div>
                 </div>
             </div>
@@ -555,7 +537,6 @@
 
                 <div class="space-divider"></div>
 
-                <!-- وێنەی کەوانەیی پیاوان -->
                 <div class="arched-image-men"></div>
 
                 <div class="space-divider"></div>
@@ -575,20 +556,29 @@
                         <span>18</span><span>19</span><span>20</span><span>21</span><span>22</span><span>23</span><span>24</span>
                         <span>25</span><span>26</span><span>27</span><span>28</span><span>29</span><span>30</span><span>31</span>
                     </div>
-                    <div class="countdown-timer" id="countdown-men">کاتی ماوە بۆ ڕۆژی بۆنەکە: ...</div>
+                    <div class="countdown-timer" id="countdown-men">کاتی ماوە: ...</div>
                 </div>
 
                 <div class="space-divider"></div>
 
-                <div class="label-title">ناونیشان: مزگەوتی بەهەشت</div>
+                <div class="label-title">ناونیشانی</div>
 
                 <div class="space-divider"></div>
 
-                <div class="map-card"></div>
+                <!-- ماپی ڕاستەوخۆی شاری سلێمانی بۆ پیاوان -->
+                <iframe 
+                    class="map-interactive-frame" 
+                    src="https://maps.google.com/maps?q=Sulaymaniyah,%20Iraq&t=&z=13&ie=UTF8&iwloc=&output=embed" 
+                    frameborder="0" 
+                    scrolling="no" 
+                    marginheight="0" 
+                    marginwidth="0" 
+                    loading="lazy">
+                </iframe>
 
                 <div class="space-divider"></div>
 
-                <a href="https://maps.google.com/?q=MEN_LOCATION" target="_blank" class="btn-google-map">کردنەوە لە Google Maps</a>
+                <a href="https://maps.google.com/?q=Sulaymaniyah" target="_blank" class="btn-google-map">کردنەوە لە Google Maps</a>
 
                 <div class="space-divider"></div>
 
@@ -624,7 +614,6 @@
 
                 <div class="space-divider"></div>
 
-                <!-- وێنەی کەوانەیی خانمان -->
                 <div class="arched-image-women"></div>
 
                 <div class="space-divider"></div>
@@ -644,20 +633,29 @@
                         <span>18</span><span>19</span><span>20</span><span>21</span><span>22</span><span>23</span><span>24</span>
                         <span>25</span><span>26</span><span>27</span><span>28</span><span>29</span><span>30</span><span>31</span>
                     </div>
-                    <div class="countdown-timer" id="countdown-women">کاتی ماوە بۆ ڕۆژی بۆنەکە: ...</div>
+                    <div class="countdown-timer" id="countdown-women">کاتی ماوە: ...</div>
                 </div>
 
                 <div class="space-divider"></div>
 
-                <div class="label-title">ناونیشان: ماڵی حاجی ڕەحیم</div>
+                <div class="label-title">ناونیشانی</div>
 
                 <div class="space-divider"></div>
 
-                <div class="map-card"></div>
+                <!-- ماپی ڕاستەوخۆی شاری سلێمانی بۆ خانمان -->
+                <iframe 
+                    class="map-interactive-frame" 
+                    src="https://maps.google.com/maps?q=Sulaymaniyah,%20Iraq&t=&z=13&ie=UTF8&iwloc=&output=embed" 
+                    frameborder="0" 
+                    scrolling="no" 
+                    marginheight="0" 
+                    marginwidth="0" 
+                    loading="lazy">
+                </iframe>
 
                 <div class="space-divider"></div>
 
-                <a href="https://maps.google.com/?q=WOMEN_LOCATION" target="_blank" class="btn-google-map">کردنەوە لە Google Maps</a>
+                <a href="https://maps.google.com/?q=Sulaymaniyah" target="_blank" class="btn-google-map">کردنەوە لە Google Maps</a>
 
                 <div class="space-divider"></div>
 
@@ -692,83 +690,14 @@
         const btnWomen = document.getElementById('btn-women');
         const pageDetailsMen = document.getElementById('page-details-men');
         const pageDetailsWomen = document.getElementById('page-details-women');
-
-        let audioCtx = null;
-        let isMusicPlaying = false;
-
-        function startRomanticMusic() {
-            if (isMusicPlaying) return;
-            try {
-                const AudioCtx = window.AudioContext || window.webkitAudioContext;
-                audioCtx = new AudioCtx();
-                isMusicPlaying = true;
-
-                const romanticProgression = [
-                    { bass: 174.61, pad: [261.63, 329.63, 349.23], melody: [523.25, 659.25, 523.25] },
-                    { bass: 164.81, pad: [246.94, 329.63, 392.00], melody: [493.88, 587.33, 493.88] },
-                    { bass: 146.83, pad: [220.00, 261.63, 349.23], melody: [440.00, 523.25, 440.00] },
-                    { bass: 130.81, pad: [196.00, 261.63, 329.63], melody: [392.00, 523.25, 659.25] }
-                ];
-                let step = 0;
-
-                function playRomanticBar() {
-                    if (!isMusicPlaying) return;
-                    const chord = romanticProgression[step];
-                    const now = audioCtx.currentTime;
-
-                    const bassOsc = audioCtx.createOscillator();
-                    const bassGain = audioCtx.createGain();
-                    bassOsc.type = 'sine';
-                    bassOsc.frequency.setValueAtTime(chord.bass, now);
-                    bassGain.gain.setValueAtTime(0, now);
-                    bassGain.gain.linearRampToValueAtTime(0.06, now + 1.2);
-                    bassGain.gain.exponentialRampToValueAtTime(0.0001, now + 4.8);
-                    bassOsc.connect(bassGain);
-                    bassGain.connect(audioCtx.destination);
-                    bassOsc.start(now);
-                    bassOsc.stop(now + 4.9);
-
-                    chord.pad.forEach((freq) => {
-                        const padOsc = audioCtx.createOscillator();
-                        const padGain = audioCtx.createGain();
-                        padOsc.type = 'triangle';
-                        padOsc.frequency.setValueAtTime(freq, now);
-                        padGain.gain.setValueAtTime(0, now);
-                        padGain.gain.linearRampToValueAtTime(0.025, now + 1.5);
-                        padGain.gain.exponentialRampToValueAtTime(0.0001, now + 4.8);
-                        padOsc.connect(padGain);
-                        padGain.connect(audioCtx.destination);
-                        padOsc.start(now);
-                        padOsc.stop(now + 4.9);
-                    });
-
-                    chord.melody.forEach((noteFreq, idx) => {
-                        const noteTime = now + (idx * 1.4);
-                        const melOsc = audioCtx.createOscillator();
-                        const melGain = audioCtx.createGain();
-                        melOsc.type = 'sine';
-                        melOsc.frequency.setValueAtTime(noteFreq, noteTime);
-                        melGain.gain.setValueAtTime(0, noteTime);
-                        melGain.gain.linearRampToValueAtTime(0.05, noteTime + 0.1);
-                        melGain.gain.exponentialRampToValueAtTime(0.0001, noteTime + 2.2);
-                        melOsc.connect(melGain);
-                        melGain.connect(audioCtx.destination);
-                        melOsc.start(noteTime);
-                        melOsc.stop(noteTime + 2.3);
-                    });
-
-                    step = (step + 1) % romanticProgression.length;
-                    setTimeout(playRomanticBar, 4400);
-                }
-
-                playRomanticBar();
-            } catch (e) {
-                console.log("Audio not supported");
-            }
-        }
+        const music = document.getElementById('bg-music');
 
         seal.addEventListener('click', () => {
-            startRomanticMusic();
+            if (music) {
+                music.play().catch(err => {
+                    console.log("Audio permission required:", err);
+                });
+            }
             page1.classList.add('opened');
             setTimeout(() => {
                 page1.classList.add('hidden');
