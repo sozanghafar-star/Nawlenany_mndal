@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="ckb" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بانگهێشتنامەی فەرمی VIP</title>
+    <style>
+        :root {
+            --maroon-dark: #120204;
+            --maroon-matte: #240407;
+            --maroon-text: #200305;
+            --gold: #D4AF37;
+            --gold-bright: #FFDF73;
+            --beige: #F5F2EB;
+            --pink: #E8A598;
+            --vip-glass: rgba(30, 4, 7, 0.65);
+            --vip-border: rgba(212, 175, 55, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--maroon-dark);
+            color: var(--beige);
+        }
+
+        .main-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            perspective: 3000px;
+        }
+
+        .page {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s ease;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* --- پەڕەی ١: پێشەکی بە وێنەی یەکگرتووی چوار باڵ --- */
+        #page-1 {
+            background-color: #0a0102;
+            z-index: 30;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* هەر چوار باڵەکە قەبارەی تەواوی شاشە وەردەگرن بۆ ئەوەی یەک وێنەی بێ درز دروست بکەن */
+        .panel {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* وێنەی یەکگرتووی سەرەکی چوار باڵەکە لێرە دابنێ */
+            background-image: url('Screenshot_20260830-024226_Pinterest.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: var(--maroon-matte);
+            transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .panel-top {
+            clip-path: polygon(0 0, 100% 0, 50% 50%);
+        }
+        .panel-bottom {
+            clip-path: polygon(0 100%, 100% 100%, 50% 50%);
+        }
+        .panel-left {
+            clip-path: polygon(0 0, 50% 50%, 0 100%);
+        }
+        .panel-right {
+            clip-path: polygon(100% 0, 100% 100%, 50% 50%);
+        }
+
+        .opened .panel-top { transform: translateY(-100%); }
+        .opened .panel-bottom { transform: translateY(100%); }
+        .opened .panel-left { transform: translateX(-100%); }
+        .opened .panel-right { transform: translateX(100%); }
+
+        #main-seal {
+            width: 140px;
+            height: 120px;
+            background: linear-gradient(135deg, #42080e 0%, #170204 100%);
+            position: absolute;
+            z-index: 35;
+            clip-path: polygon(25% 0%, 75% 0%, 100% 35%, 50% 100%, 0% 35%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.9), 0 0 25px rgba(212, 175, 55, 0.5);
+            border-top: 2px solid var(--gold-bright);
+            transition: transform 0.4s ease, opacity 0.5s ease;
+        }
+
+        #main-seal:hover {
+            transform: scale(1.06);
+            box-shadow: 0 0 35px rgba(212, 175, 55, 0.8);
+        }
+
+        #main-seal span {
+            color: var(--gold-bright);
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: -10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .opened #main-seal {
+            opacity: 0;
+            transform: scale(0.2);
+            pointer-events: none;
+        }
+
+        /* --- پەڕەی ٢: دەفتەری کراوە بە وێنەی یەکگرتوو --- */
+        #page-2 {
+            background-color: var(--maroon-dark);
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        #greeting-text {
+            font-size: 20px;
+            text-align: center;
+            margin-bottom: 25px;
+            color: var(--beige);
+            max-width: 650px;
+            line-height: 1.7;
+        }
+
+        #guest-name {
+            color: var(--gold-bright);
+            font-weight: 800;
+            font-size: 22px;
+            text-shadow: 0 0 10px rgba(255, 223, 115, 0.5);
+            border-bottom: 1.5px dashed var(--gold);
+            padding-bottom: 2px;
+        }
+
+        .book-wrapper {
+            width: 90vw;
+            max-width: 680px;
+            height: 65vh;
+            max-height: 490px;
+            perspective: 3000px;
+            position: relative;
+        }
+
+        .book-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            direction: ltr;
+            position: relative;
+            transform-style: preserve-3d;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.85);
+            border-radius: 8px;
+        }
+
+        .book-spine {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 6px;
+            background: linear-gradient(to right, rgba(0,0,0,0.6), rgba(255,255,255,0.15), rgba(0,0,0,0.6));
+            transform: translateX(-50%);
+            z-index: 20;
+        }
+
+        /* بەکارهێنانی وێنەی یەکگرتوو بە ڕێژەی 200% لەسەر هەردوو پەڕەکە */
+        .book-leaf {
+            width: 50%;
+            height: 100%;
+            position: relative;
+            /* وێنەی یەکگرتووی دەفتەرەکە لێرە دابنێ */
+            background-image: url('IMAGE_NOTEBOOK_FULL.jpg');
+            background-size: 200% 100%;
+            background-repeat: no-repeat;
+            background-color: #f7f3e8;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 1.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+            transform-style: preserve-3d;
+        }
+
+        .leaf-left {
+            background-position: left center;
+            transform-origin: right center;
+            border-radius: 8px 0 0 8px;
+            border-right: 1px solid rgba(0,0,0,0.15);
+        }
+
+        .leaf-right {
+            background-position: right center;
+            transform-origin: left center;
+            border-radius: 0 8px 8px 0;
+            border-left: 1px solid rgba(0,0,0,0.15);
+        }
+
+        .direct-leaf-text {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--maroon-text);
+            text-align: center;
+            pointer-events: none;
+            user-select: none;
+            letter-spacing: 0.5px;
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.6);
+            direction: rtl;
+        }
+
+        .flip-right-to-left {
+            transform: rotateY(-180deg) !important;
+            z-index: 30 !important;
+        }
+
+        .flip-left-to-right {
+            transform: rotateY(180deg) !important;
+            z-index: 30 !important;
+        }
+
+        /* --- پەڕە سەرەکییەکان --- */
+        .detail-page {
+            background-color: var(--maroon-dark);
+            z-index: 10;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.96);
+            position: relative;
+        }
+
+        .detail-page.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1);
+        }
+
+        .sparkles-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .content-flow {
+            width: 100%;
+            max-width: 580px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 2.5cm;
+            position: relative;
+            z-index: 2;
+        }
+
+        .top-margin-spacer {
+            height: 4cm;
+            width: 100%;
+        }
+
+        .space-divider {
+            height: 2cm;
+            width: 100%;
+        }
+
+        .main-bismillah {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--gold-bright);
+            text-align: center;
+            text-shadow: 0 0 15px rgba(255, 223, 115, 0.5);
+        }
+
+        .glass-box-maroon {
+            background: var(--vip-glass);
+            border: 1px solid var(--vip-border);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 16px;
+            padding: 24px;
+            width: 90%;
+            text-align: center;
+            line-height: 1.9;
+            color: var(--beige);
+            font-size: 16.5px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(212, 175, 55, 0.1);
+        }
+
+        /* لاکێشەی سەر کەوانەیی بۆ دانانی وێنە */
+        .arched-image-men {
+            width: 90%;
+            height: 240px;
+            border-radius: 130px 130px 12px 12px;
+            border: 1.5px solid var(--gold);
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            /* وێنەی ناو پەڕەی پیاوان لێرە دابنێ */
+            background-image: url('IMAGE_BABY_MEN.jpg');
+        }
+
+        .arched-image-women {
+            width: 90%;
+            height: 240px;
+            border-radius: 130px 130px 12px 12px;
+            border: 1.5px solid var(--gold);
+            background-size: cover;
+            background-position: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            /* وێنەی ناو پەڕەی خانمان لێرە دابنێ */
+            background-image: url('IMAGE_BABY_WOMEN.jpg');
+        }
+
+        .label-title {
+            color: var(--gold-bright);
+            font-size: 21px;
+            font-weight: bold;
+            text-align: center;
+            text-shadow: 0 0 8px rgba(255, 223, 115, 0.4);
+        }
+
+        .calendar-box {
+            background: var(--vip-glass);
+            border: 1px solid var(--vip-border);
+            backdrop-filter: blur(16px);
+            border-radius: 16px;
+            padding: 18px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .cal-month {
+            color: var(--gold-bright);
+            font-weight: bold;
+            font-size: 17px;
+            margin-bottom: 12px;
+        }
+
+        .cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+            font-size: 14px;
+        }
+
+        .cal-head {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+            padding-bottom: 5px;
+        }
+
+        .pink-target-day {
+            background-color: var(--pink);
+            color: #120204;
+            border-radius: 50%;
+            font-weight: bold;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 28px;
+            height: 28px;
+            margin: auto;
+            box-shadow: 0 0 12px var(--pink);
+        }
+
+        .countdown-timer {
+            margin-top: 15px;
+            font-size: 15px;
+            color: var(--gold-bright);
+            font-weight: 600;
+        }
+
+        .map-card {
+            width: 90%;
+            height: 170px;
+            background-color: #120204;
+            border-radius: 14px;
+            border: 1px solid var(--vip-border);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url('IMAGE_MAP_PREVIEW.jpg');
+            background-size: cover;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        .btn-google-map {
+            background: linear-gradient(135deg, #1a73e8, #0d47a1);
+            color: #fff;
+            padding: 12px 28px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 14.5px;
+            font-weight: bold;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.2s;
+        }
+
+        .btn-google-map:hover {
+            transform: scale(1.04);
+        }
+
+        .gold-glass-box {
+            background: rgba(212, 175, 55, 0.08);
+            border: 1px solid var(--gold);
+            backdrop-filter: blur(14px);
+            border-radius: 16px;
+            padding: 22px;
+            width: 90%;
+            color: var(--beige);
+            text-align: center;
+            line-height: 1.8;
+            font-size: 15.5px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .phone-action-btn {
+            font-size: 32px;
+            text-decoration: none;
+            background: rgba(212, 175, 55, 0.15);
+            width: 72px;
+            height: 72px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            border: 1px solid var(--gold);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .phone-action-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.6);
+        }
+
+        .btn-back {
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--gold-bright);
+            border: 1px solid var(--gold);
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background: var(--gold);
+            color: var(--maroon-dark);
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.7);
+        }
+
+        #fireworks-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+
+        <canvas id="fireworks-overlay"></canvas>
+
+        <!-- پەڕەی ١: پێشەکی چوار باڵی یەکگرتوو -->
+        <div id="page-1" class="page">
+            <div class="panel panel-top"></div>
+            <div class="panel panel-bottom"></div>
+            <div class="panel panel-left"></div>
+            <div class="panel panel-right"></div>
+            
+            <div id="main-seal">
+                <span>بیکەرەوە</span>
+            </div>
+        </div>
+
+        <!-- پەڕەی ٢: دەفتەری کراوەی یەکگرتوو -->
+        <div id="page-2" class="page hidden">
+            <div id="greeting-text">
+                <span id="guest-name">سڵاو</span> ، بەڕێزتان بانگهێشت کراون بۆ ئەم بۆنەیە ، تکایە دەست لە پەڕی گونجاو بدە
+            </div>
+
+            <div class="book-wrapper">
+                <div class="book-container">
+                    <div class="book-spine"></div>
+                    <div class="book-leaf leaf-left" id="btn-women">
+                        <div class="direct-leaf-text">تایبەت بە خانمان</div>
+                    </div>
+                    <div class="book-leaf leaf-right" id="btn-men">
+                        <div class="direct-leaf-text">تایبەت بە پیاوان</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- پەڕەی ٣: تایبەت بە پیاوان -->
+        <div id="page-details-men" class="page detail-page hidden">
+            <canvas class="sparkles-canvas" id="sparkles-men"></canvas>
+            <div class="content-flow">
+                
+                <div class="top-margin-spacer"></div>
+
+                <div class="main-bismillah">بەناوی خوای گەورە و میهرەبان</div>
+
+                <div class="space-divider"></div>
+
+                <div class="glass-box-maroon">
+                    ئەم ئاهەنگە بەبۆنەی ناونانی منداڵەکەمانەوەیە کە خوای گەورە بەسەری کردینەوە و کچێکی جوانی پێمان بەخشی
+                </div>
+
+                <div class="space-divider"></div>
+
+                <!-- وێنەی کەوانەیی پیاوان -->
+                <div class="arched-image-men"></div>
+
+                <div class="space-divider"></div>
+
+                <div class="label-title">بەرواری بۆنەکە</div>
+
+                <div class="space-divider"></div>
+
+                <div class="calendar-box">
+                    <div class="cal-month">تەمموز 2027</div>
+                    <div class="cal-grid">
+                        <span class="cal-head">ش</span><span class="cal-head">ی</span><span class="cal-head">د</span><span class="cal-head">س</span><span class="cal-head">چ</span><span class="cal-head">پ</span><span class="cal-head">هـ</span>
+                        <span></span><span></span><span></span><span></span>
+                        <span class="pink-target-day">1</span><span>2</span><span>3</span>
+                        <span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+                        <span>11</span><span>12</span><span>13</span><span>14</span><span>15</span><span>16</span><span>17</span>
+                        <span>18</span><span>19</span><span>20</span><span>21</span><span>22</span><span>23</span><span>24</span>
+                        <span>25</span><span>26</span><span>27</span><span>28</span><span>29</span><span>30</span><span>31</span>
+                    </div>
+                    <div class="countdown-timer" id="countdown-men">کاتی ماوە: ...</div>
+                </div>
+
+                <div class="space-divider"></div>
+
+                <div class="label-title">ناونیشانی</div>
+
+                <div class="space-divider"></div>
+
+                <div class="map-card"></div>
+
+                <div class="space-divider"></div>
+
+                <a href="https://maps.google.com/?q=MEN_LOCATION" target="_blank" class="btn-google-map">کردنەوە لە Google Maps</a>
+
+                <div class="space-divider"></div>
+
+                <div class="gold-glass-box">
+                    بۆنەکە بە دیاریکراوی کاتژمێر 8:00 ی شەو دەست پێدەکات ، بەهاتنتان ڕۆژەکەمان جوانتر و مانادارتر دەکەن ، بۆ زانیاری زیاتر دەتوانن پەیوەندیمان پێوە بکەن
+                </div>
+
+                <div class="space-divider"></div>
+
+                <a href="tel:07500000000" class="phone-action-btn">📞</a>
+
+                <div class="space-divider"></div>
+
+                <button class="btn-back" onclick="goBackToNotebook()">گەڕانەوە بۆ دەفتەرەکە ↩</button>
+
+            </div>
+        </div>
+
+        <!-- پەڕەی ٤: تایبەت بە خانمان -->
+        <div id="page-details-women" class="page detail-page hidden">
+            <canvas class="sparkles-canvas" id="sparkles-women"></canvas>
+            <div class="content-flow">
+                
+                <div class="top-margin-spacer"></div>
+
+                <div class="main-bismillah">بەناوی خوای گەورە و میهرەبان</div>
+
+                <div class="space-divider"></div>
+
+                <div class="glass-box-maroon">
+                    ئەم ئاهەنگە بەبۆنەی ناونانی منداڵەکەمانەوەیە کە خوای گەورە بەسەری کردینەوە و کچێکی جوانی پێمان بەخشی
+                </div>
+
+                <div class="space-divider"></div>
+
+                <!-- وێنەی کەوانەیی خانمان -->
+                <div class="arched-image-women"></div>
+
+                <div class="space-divider"></div>
+
+                <div class="label-title">بەرواری بۆنەکە</div>
+
+                <div class="space-divider"></div>
+
+                <div class="calendar-box">
+                    <div class="cal-month">تەمموز 2027</div>
+                    <div class="cal-grid">
+                        <span class="cal-head">ش</span><span class="cal-head">ی</span><span class="cal-head">د</span><span class="cal-head">س</span><span class="cal-head">چ</span><span class="cal-head">پ</span><span class="cal-head">هـ</span>
+                        <span></span><span></span><span></span><span></span>
+                        <span class="pink-target-day">1</span><span>2</span><span>3</span>
+                        <span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+                        <span>11</span><span>12</span><span>13</span><span>14</span><span>15</span><span>16</span><span>17</span>
+                        <span>18</span><span>19</span><span>20</span><span>21</span><span>22</span><span>23</span><span>24</span>
+                        <span>25</span><span>26</span><span>27</span><span>28</span><span>29</span><span>30</span><span>31</span>
+                    </div>
+                    <div class="countdown-timer" id="countdown-women">کاتی ماوە: ...</div>
+                </div>
+
+                <div class="space-divider"></div>
+
+                <div class="label-title">ناونیشانی</div>
+
+                <div class="space-divider"></div>
+
+                <div class="map-card"></div>
+
+                <div class="space-divider"></div>
+
+                <a href="https://maps.google.com/?q=WOMEN_LOCATION" target="_blank" class="btn-google-map">کردنەوە لە Google Maps</a>
+
+                <div class="space-divider"></div>
+
+                <div class="gold-glass-box">
+                    بۆنەکە بە دیاریکراوی کاتژمێر 8:00 ی شەو دەست پێدەکات ، بەهاتنتان ڕۆژەکەمان جوانتر و مانادارتر دەکەن ، بۆ زانیاری زیاتر دەتوانن پەیوەندیمان پێوە بکەن
+                </div>
+
+                <div class="space-divider"></div>
+
+                <a href="tel:07500000001" class="phone-action-btn">📞</a>
+
+                <div class="space-divider"></div>
+
+                <button class="btn-back" onclick="goBackToNotebook()">گەڕانەوە بۆ دەفتەرەکە ↩</button>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const guestName = urlParams.get('name');
+        if (guestName) {
+            document.getElementById('guest-name').innerText = guestName;
+        }
+
+        const page1 = document.getElementById('page-1');
+        const page2 = document.getElementById('page-2');
+        const seal = document.getElementById('main-seal');
+        const btnMen = document.getElementById('btn-men');
+        const btnWomen = document.getElementById('btn-women');
+        const pageDetailsMen = document.getElementById('page-details-men');
+        const pageDetailsWomen = document.getElementById('page-details-women');
+
+        let audioCtx = null;
+        let isMusicPlaying = false;
+
+        function startRomanticMusic() {
+            if (isMusicPlaying) return;
+            try {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioCtx();
+                isMusicPlaying = true;
+
+                const romanticProgression = [
+                    { bass: 174.61, pad: [261.63, 329.63, 349.23], melody: [523.25, 659.25, 523.25] },
+                    { bass: 164.81, pad: [246.94, 329.63, 392.00], melody: [493.88, 587.33, 493.88] },
+                    { bass: 146.83, pad: [220.00, 261.63, 349.23], melody: [440.00, 523.25, 440.00] },
+                    { bass: 130.81, pad: [196.00, 261.63, 329.63], melody: [392.00, 523.25, 659.25] }
+                ];
+                let step = 0;
+
+                function playRomanticBar() {
+                    if (!isMusicPlaying) return;
+                    const chord = romanticProgression[step];
+                    const now = audioCtx.currentTime;
+
+                    const bassOsc = audioCtx.createOscillator();
+                    const bassGain = audioCtx.createGain();
+                    bassOsc.type = 'sine';
+                    bassOsc.frequency.setValueAtTime(chord.bass, now);
+                    bassGain.gain.setValueAtTime(0, now);
+                    bassGain.gain.linearRampToValueAtTime(0.06, now + 1.2);
+                    bassGain.gain.exponentialRampToValueAtTime(0.0001, now + 4.8);
+                    bassOsc.connect(bassGain);
+                    bassGain.connect(audioCtx.destination);
+                    bassOsc.start(now);
+                    bassOsc.stop(now + 4.9);
+
+                    chord.pad.forEach((freq) => {
+                        const padOsc = audioCtx.createOscillator();
+                        const padGain = audioCtx.createGain();
+                        padOsc.type = 'triangle';
+                        padOsc.frequency.setValueAtTime(freq, now);
+                        padGain.gain.setValueAtTime(0, now);
+                        padGain.gain.linearRampToValueAtTime(0.025, now + 1.5);
+                        padGain.gain.exponentialRampToValueAtTime(0.0001, now + 4.8);
+                        padOsc.connect(padGain);
+                        padGain.connect(audioCtx.destination);
+                        padOsc.start(now);
+                        padOsc.stop(now + 4.9);
+                    });
+
+                    chord.melody.forEach((noteFreq, idx) => {
+                        const noteTime = now + (idx * 1.4);
+                        const melOsc = audioCtx.createOscillator();
+                        const melGain = audioCtx.createGain();
+                        melOsc.type = 'sine';
+                        melOsc.frequency.setValueAtTime(noteFreq, noteTime);
+                        melGain.gain.setValueAtTime(0, noteTime);
+                        melGain.gain.linearRampToValueAtTime(0.05, noteTime + 0.1);
+                        melGain.gain.exponentialRampToValueAtTime(0.0001, noteTime + 2.2);
+                        melOsc.connect(melGain);
+                        melGain.connect(audioCtx.destination);
+                        melOsc.start(noteTime);
+                        melOsc.stop(noteTime + 2.3);
+                    });
+
+                    step = (step + 1) % romanticProgression.length;
+                    setTimeout(playRomanticBar, 4400);
+                }
+
+                playRomanticBar();
+            } catch (e) {
+                console.log("Audio not supported");
+            }
+        }
+
+        seal.addEventListener('click', () => {
+            startRomanticMusic();
+            page1.classList.add('opened');
+            setTimeout(() => {
+                page1.classList.add('hidden');
+                page2.classList.remove('hidden');
+            }, 1100);
+        });
+
+        btnMen.addEventListener('click', () => {
+            btnMen.classList.add('flip-right-to-left');
+            setTimeout(() => {
+                transitionToDetail(pageDetailsMen, 'sparkles-men');
+            }, 1100);
+        });
+
+        btnWomen.addEventListener('click', () => {
+            btnWomen.classList.add('flip-left-to-right');
+            setTimeout(() => {
+                transitionToDetail(pageDetailsWomen, 'sparkles-women');
+            }, 1100);
+        });
+
+        function transitionToDetail(targetPage, canvasId) {
+            page2.style.opacity = '0';
+            setTimeout(() => {
+                page2.classList.add('hidden');
+                targetPage.classList.remove('hidden');
+                setTimeout(() => {
+                    targetPage.classList.add('active');
+                    runFireworks3Seconds();
+                    drawFullPageSparkles(canvasId, targetPage);
+                }, 50);
+            }, 600);
+        }
+
+        function goBackToNotebook() {
+            pageDetailsMen.classList.remove('active');
+            pageDetailsWomen.classList.remove('active');
+
+            setTimeout(() => {
+                pageDetailsMen.classList.add('hidden');
+                pageDetailsWomen.classList.add('hidden');
+
+                btnMen.classList.remove('flip-right-to-left');
+                btnWomen.classList.remove('flip-left-to-right');
+
+                page2.classList.remove('hidden');
+                setTimeout(() => {
+                    page2.style.opacity = '1';
+                }, 50);
+            }, 600);
+        }
+
+        function drawFullPageSparkles(canvasId, container) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            const totalHeight = Math.max(container.scrollHeight, window.innerHeight, 2000);
+            const totalWidth = container.clientWidth || window.innerWidth;
+            
+            canvas.width = totalWidth;
+            canvas.height = totalHeight;
+            canvas.style.height = totalHeight + 'px';
+            canvas.style.width = totalWidth + 'px';
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const sparkleCount = 380;
+
+            for (let i = 0; i < sparkleCount; i++) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                const size = Math.random() * 2.3 + 0.6;
+                const alpha = Math.random() * 0.75 + 0.25;
+
+                ctx.save();
+                ctx.globalAlpha = alpha;
+                ctx.fillStyle = "#FFDF73";
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = "#FFD700";
+
+                ctx.beginPath();
+                ctx.arc(x, y, size, 0, Math.PI * 2);
+                ctx.fill();
+
+                if (Math.random() > 0.45) {
+                    ctx.strokeStyle = "rgba(255, 223, 115, " + (alpha * 0.75) + ")";
+                    ctx.lineWidth = 0.75;
+                    ctx.beginPath();
+                    ctx.moveTo(x - size * 3.5, y);
+                    ctx.lineTo(x + size * 3.5, y);
+                    ctx.moveTo(x, y - size * 3.5);
+                    ctx.lineTo(x, y + size * 3.5);
+                    ctx.stroke();
+                }
+
+                ctx.restore();
+            }
+        }
+
+        window.addEventListener('resize', () => {
+            if (pageDetailsMen.classList.contains('active')) drawFullPageSparkles('sparkles-men', pageDetailsMen);
+            if (pageDetailsWomen.classList.contains('active')) drawFullPageSparkles('sparkles-women', pageDetailsWomen);
+        });
+
+        const eventDate = new Date("July 1, 2027 20:00:00").getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const diff = eventDate - now;
+
+            if (diff <= 0) {
+                const finished = "ئاهەنگەکە بەڕێوەچوو";
+                document.getElementById('countdown-men').innerText = finished;
+                document.getElementById('countdown-women').innerText = finished;
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+            const text = `کاتی ماوە: ${days} ڕۆژ و ${hours} کاتژمێر و ${minutes} خولەک`;
+            document.getElementById('countdown-men').innerText = text;
+            document.getElementById('countdown-women').innerText = text;
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 60000);
+
+        function runFireworks3Seconds() {
+            const canvas = document.getElementById('fireworks-overlay');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            let particles = [];
+            let isRunning = true;
+
+            class Particle {
+                constructor(x, y, color) {
+                    this.x = x;
+                    this.y = y;
+                    this.color = color;
+                    this.velocity = {
+                        x: (Math.random() - 0.5) * 10,
+                        y: (Math.random() - 0.5) * 10
+                    };
+                    this.alpha = 1;
+                    this.friction = 0.94;
+                }
+
+                draw() {
+                    ctx.globalAlpha = this.alpha;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, 2.5, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                }
+
+                update() {
+                    this.velocity.x *= this.friction;
+                    this.velocity.y *= this.friction;
+                    this.y += 0.08;
+                    this.x += this.velocity.x;
+                    this.y += this.velocity.y;
+                    this.alpha -= 0.015;
+                }
+            }
+
+            function fire() {
+                if (!isRunning) return;
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * (canvas.height * 0.4);
+                const colors = ['#FFD700', '#FFDF73', '#FF69B4', '#FFFFFF', '#FFA07A'];
+                const selectedColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                for (let i = 0; i < 35; i++) {
+                    particles.push(new Particle(x, y, selectedColor));
+                }
+            }
+
+            const interval = setInterval(fire, 250);
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                particles.forEach((p, index) => {
+                    if (p.alpha > 0) {
+                        p.update();
+                        p.draw();
+                    } else {
+                        particles.splice(index, 1);
+                    }
+                });
+
+                if (isRunning || particles.length > 0) {
+                    requestAnimationFrame(animate);
+                } else {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
+            }
+
+            animate();
+
+            setTimeout(() => {
+                isRunning = false;
+                clearInterval(interval);
+                setTimeout(() => {
+                    particles = [];
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }, 1000);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

@@ -1,1 +1,0 @@
-# Nawlenany_mndal
